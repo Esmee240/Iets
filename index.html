@@ -342,6 +342,34 @@
       const TURRET_X = W / 2;
       const TURRET_Y = GROUND_Y - 38;
 
+      // Retro kleurenpaletten per golf (Golf 1 = origineel CGA-palet)
+      const WAVE_PALETTES = [
+        { sky: '#03030c', groundLine: '#ff55ff', groundFill: '#221133', bunkerBase: '#55ffff', bunkerInner: '#2277aa', dome: '#ff55ff', heli: '#55ffff', jet: '#ff55ff', chute: '#ff55ff' },
+        { sky: '#030b08', groundLine: '#55ff55', groundFill: '#112a18', bunkerBase: '#ffff55', bunkerInner: '#777722', dome: '#55ff55', heli: '#ffff55', jet: '#55ff55', chute: '#55ff55' },
+        { sky: '#0c0503', groundLine: '#ff8833', groundFill: '#2b140a', bunkerBase: '#55ffff', bunkerInner: '#1f6688', dome: '#ff8833', heli: '#ffaa44', jet: '#ff5555', chute: '#ff8833' },
+        { sky: '#070312', groundLine: '#aa66ff', groundFill: '#1d1036', bunkerBase: '#ff77cc', bunkerInner: '#7a295c', dome: '#aa66ff', heli: '#77ddff', jet: '#ff77cc', chute: '#aa66ff' }
+      ];
+
+      function getCurrentTheme() {
+        if (wave % 5 === 0) {
+          const hue = (frameCount * 4) % 360;
+          return {
+            isRainbow: true,
+            sky: '#060312',
+            groundLine: 'hsl(' + hue + ', 100%, 62%)',
+            groundFill: 'hsl(' + ((hue + 20) % 360) + ', 45%, 14%)',
+            bunkerBase: 'hsl(' + ((hue + 120) % 360) + ', 100%, 62%)',
+            bunkerInner: 'hsl(' + ((hue + 120) % 360) + ', 65%, 30%)',
+            dome: 'hsl(' + ((hue + 240) % 360) + ', 100%, 62%)',
+            heli: 'hsl(' + ((hue + 60) % 360) + ', 100%, 65%)',
+            jet: 'hsl(' + ((hue + 180) % 360) + ', 100%, 65%)',
+            chute: 'hsl(' + ((hue + 300) % 360) + ', 100%, 65%)'
+          };
+        }
+        const pal = WAVE_PALETTES[(wave - 1) % WAVE_PALETTES.length];
+        return Object.assign({ isRainbow: false }, pal);
+      }
+
       function formatScore(val) {
         const sign = val < 0 ? '-' : '';
         return sign + Math.abs(val).toString().padStart(5, '0');
@@ -384,6 +412,7 @@
       let particles = [];
       let floatingTexts = [];
       let assaultSquad = null;
+      let rainbowBossSpawnedForWave = 0;
 
       // ==========================================
       // 3. MUIS & TOETSENBORD BESTURING (TOUCH ACTIEF GEBLOKKEERD)
@@ -498,14 +527,19 @@
         if (newWave > wave) {
           wave = newWave;
           waveEl.textContent = wave;
+          const isRainbowWave = (wave % 5 === 0);
           floatingTexts.push({
             x: W / 2,
             y: 120,
-            text: 'GOLF ' + wave + '!',
-            color: '#55ff55',
-            life: 90,
+            text: isRainbowWave ? 'GOLF ' + wave + ' - REGENBOOG LEVEL!' : 'GOLF ' + wave + '!',
+            color: isRainbowWave ? '#ff55ff' : '#55ff55',
+            life: 110,
             vy: -0.4
           });
+          if (isRainbowWave && rainbowBossSpawnedForWave !== wave) {
+            rainbowBossSpawnedForWave = wave;
+            spawnMegaAircraft();
+          }
         }
 
         if (x !== undefined && y !== undefined) {
@@ -573,11 +607,30 @@
           dir: fromLeft ? 1 : -1,
           speed: baseSpeed,
           type: isJet ? 'jet' : 'heli',
+          isMega: false,
+          points: 25,
           rotorTick: 0,
           dropsLeft: isJet ? 1 : (1 + Math.floor(Math.random() * 2)),
           nextDropX: fromLeft
             ? (80 + Math.random() * (W - 160))
             : (W - 80 - Math.random() * (W - 160))
+        });
+      }
+
+      function spawnMegaAircraft() {
+        const fromLeft = Math.random() < 0.5;
+        const y = 78;
+        aircrafts.push({
+          x: fromLeft ? -95 : W + 95,
+          y: y,
+          dir: fromLeft ? 1 : -1,
+          speed: 2.2 + Math.min(1.5, wave * 0.1),
+          type: 'mega',
+          isMega: true,
+          points: 100,
+          rotorTick: 0,
+          dropsLeft: 3,
+          nextDropX: fromLeft ? 160 : (W - 160)
         });
       }
 
@@ -636,6 +689,7 @@
         particles = [];
         floatingTexts = [];
         assaultSquad = null;
+        rainbowBossSpawnedForWave = 0;
 
         overlaySubtitle.classList.remove('negative');
         gameState = 'PLAYING';
@@ -708,10 +762,15 @@
 
           for (let j = aircrafts.length - 1; j >= 0; j--) {
             const a = aircrafts[j];
-            if (Math.abs(b.x - a.x) < 28 && Math.abs(b.y - a.y) < 16) {
-              createExplosion(a.x, a.y, ['#55ffff', '#ff55ff', '#ffff55'], 26);
+            const hitW = a.isMega ? 52 : 28;
+            const hitH = a.isMega ? 24 : 16;
+            if (Math.abs(b.x - a.x) < hitW && Math.abs(b.y - a.y) < hitH) {
+              const expColors = a.isMega
+                ? ['#ff5555', '#ffff55', '#55ff55', '#55ffff', '#ff55ff', '#ffffff']
+                : ['#55ffff', '#ff55ff', '#ffff55'];
+              createExplosion(a.x, a.y, expColors, a.isMega ? 48 : 26);
               playSound('explosion');
-              addScore(25, a.x, a.y - 10, '#55ffff');
+              addScore(a.points || 25, a.x, a.y - 12, a.isMega ? '#ffff55' : '#55ffff');
               aircrafts.splice(j, 1);
               bulletHit = true;
               break;
@@ -762,12 +821,13 @@
               spawnParatrooper(a.x, a.y);
               a.dropsLeft--;
               if (a.dropsLeft > 0) {
-                a.nextDropX = a.x + a.dir * (90 + Math.random() * 140);
+                a.nextDropX = a.x + a.dir * (a.isMega ? 150 : (90 + Math.random() * 140));
               }
             }
           }
 
-          if ((a.dir === 1 && a.x > W + 75) || (a.dir === -1 && a.x < -75)) {
+          const outBound = a.isMega ? 115 : 75;
+          if ((a.dir === 1 && a.x > W + outBound) || (a.dir === -1 && a.x < -outBound)) {
             aircrafts.splice(i, 1);
           }
         }
@@ -872,7 +932,7 @@
       // ==========================================
       // 6. TEKENFUNCTIES
       // ==========================================
-      function drawTrooper(x, y, hasChute, isFalling) {
+      function drawTrooper(x, y, hasChute, isFalling, theme) {
         ctx.save();
         ctx.translate(Math.round(x), Math.round(y));
 
@@ -888,7 +948,7 @@
           ctx.lineTo(0, -5);
           ctx.stroke();
 
-          ctx.fillStyle = '#ff55ff';
+          ctx.fillStyle = theme ? theme.chute : '#ff55ff';
           ctx.beginPath();
           ctx.arc(0, -15, 14, Math.PI, 0, false);
           ctx.fill();
@@ -921,13 +981,53 @@
         ctx.restore();
       }
 
-      function drawAircraft(a) {
+      function drawAircraft(a, theme) {
         ctx.save();
         ctx.translate(Math.round(a.x), Math.round(a.y));
         ctx.scale(a.dir, 1);
 
-        if (a.type === 'heli') {
-          ctx.fillStyle = '#55ffff';
+        if (a.type === 'mega') {
+          // Groot regenboog-transportvliegtuig (100 punten)
+          const hue = (frameCount * 8) % 360;
+          ctx.fillStyle = 'hsl(' + hue + ', 100%, 60%)';
+          ctx.fillRect(-42, -10, 74, 20);
+
+          // Neus & cockpit
+          ctx.fillStyle = 'hsl(' + ((hue + 90) % 360) + ', 100%, 62%)';
+          ctx.beginPath();
+          ctx.moveTo(32, -10);
+          ctx.lineTo(50, 2);
+          ctx.lineTo(32, 10);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(26, -6, 12, 6);
+
+          // Grote staartvin & vleugel
+          ctx.fillStyle = 'hsl(' + ((hue + 180) % 360) + ', 100%, 60%)';
+          ctx.beginPath();
+          ctx.moveTo(-24, -10);
+          ctx.lineTo(-46, -24);
+          ctx.lineTo(-42, -10);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillRect(-12, 4, 26, 8);
+
+          // Regenboog streep op de romp
+          ctx.fillStyle = 'hsl(' + ((hue + 270) % 360) + ', 100%, 65%)';
+          ctx.fillRect(-38, -2, 66, 4);
+
+          // Dubbele navlammen
+          if (a.rotorTick % 3 !== 0) {
+            ctx.fillStyle = '#ffff55';
+            ctx.fillRect(-52, -6, 10, 4);
+            ctx.fillStyle = '#ff5555';
+            ctx.fillRect(-52, 2, 10, 4);
+          }
+        } else if (a.type === 'heli') {
+          ctx.fillStyle = theme.heli;
           ctx.fillRect(-16, -5, 28, 12);
           ctx.fillRect(12, -2, 8, 8);
           ctx.fillRect(-32, -2, 16, 4);
@@ -936,7 +1036,7 @@
           ctx.fillStyle = '#000022';
           ctx.fillRect(6, -3, 8, 5);
 
-          ctx.fillStyle = '#ff55ff';
+          ctx.fillStyle = theme.dome;
           ctx.fillRect(-12, 7, 2, 4);
           ctx.fillRect(6, 7, 2, 4);
           ctx.fillRect(-16, 10, 28, 2);
@@ -946,7 +1046,7 @@
           ctx.fillRect(-2 - rotorW / 2, -9, rotorW, 2);
           ctx.fillRect(-3, -7, 2, 2);
         } else {
-          ctx.fillStyle = '#ff55ff';
+          ctx.fillStyle = theme.jet;
           ctx.beginPath();
           ctx.moveTo(26, 2);
           ctx.lineTo(-22, -6);
@@ -968,13 +1068,13 @@
         ctx.restore();
       }
 
-      function drawTurret() {
-        ctx.fillStyle = '#55ffff';
+      function drawTurret(theme) {
+        ctx.fillStyle = theme.bunkerBase;
         ctx.fillRect(TURRET_X - 44, GROUND_Y - 22, 88, 22);
-        ctx.fillStyle = '#2277aa';
+        ctx.fillStyle = theme.bunkerInner;
         ctx.fillRect(TURRET_X - 38, GROUND_Y - 16, 76, 16);
 
-        ctx.fillStyle = '#ff55ff';
+        ctx.fillStyle = theme.dome;
         ctx.beginPath();
         ctx.arc(TURRET_X, GROUND_Y - 22, 18, Math.PI, 0, false);
         ctx.fill();
@@ -994,43 +1094,50 @@
       }
 
       function draw() {
-        ctx.fillStyle = '#03030c';
+        const theme = getCurrentTheme();
+
+        ctx.fillStyle = theme.sky;
         ctx.fillRect(0, 0, W, H);
 
         for (let i = 0; i < stars.length; i++) {
           const s = stars[i];
           const alpha = 0.4 + 0.6 * Math.abs(Math.sin(frameCount * 0.03 + s.blink));
-          ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+          if (theme.isRainbow) {
+            const starHue = (frameCount * 5 + i * 19) % 360;
+            ctx.fillStyle = 'hsla(' + starHue + ', 100%, 75%, ' + alpha + ')';
+          } else {
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+          }
           ctx.fillRect(s.x, s.y, s.size, s.size);
         }
 
-        ctx.fillStyle = '#ff55ff';
+        ctx.fillStyle = theme.groundLine;
         ctx.fillRect(0, GROUND_Y, W, 4);
-        ctx.fillStyle = '#221133';
+        ctx.fillStyle = theme.groundFill;
         ctx.fillRect(0, GROUND_Y + 4, W, H - GROUND_Y - 4);
 
-        drawTurret();
+        drawTurret(theme);
 
         for (let i = 0; i < aircrafts.length; i++) {
-          drawAircraft(aircrafts[i]);
+          drawAircraft(aircrafts[i], theme);
         }
 
         for (let i = 0; i < paratroopers.length; i++) {
           const p = paratroopers[i];
-          drawTrooper(p.x, p.y, p.hasChute, !p.hasChute);
+          drawTrooper(p.x, p.y, p.hasChute, !p.hasChute, theme);
         }
 
         if (gameState !== 'ASSAULT') {
           for (let i = 0; i < landedLeft.length; i++) {
-            drawTrooper(landedLeft[i].x, landedLeft[i].y - 8, false, false);
+            drawTrooper(landedLeft[i].x, landedLeft[i].y - 8, false, false, theme);
           }
           for (let i = 0; i < landedRight.length; i++) {
-            drawTrooper(landedRight[i].x, landedRight[i].y - 8, false, false);
+            drawTrooper(landedRight[i].x, landedRight[i].y - 8, false, false, theme);
           }
         } else if (assaultSquad) {
           for (let i = 0; i < assaultSquad.troopers.length; i++) {
             const t = assaultSquad.troopers[i];
-            drawTrooper(t.x, t.y - 8, false, false);
+            drawTrooper(t.x, t.y - 8, false, false, theme);
           }
         }
 
