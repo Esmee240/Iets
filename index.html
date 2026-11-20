@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PARATROOPER - Retro Arcade</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
+    /* Volledig zelfstandige retro arcade styling zonder externe lettertypes */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -18,7 +17,8 @@
     body {
       background-color: #050508;
       color: #55ffff;
-      font-family: 'Press Start 2P', monospace;
+      font-family: 'Courier New', Courier, 'Lucida Console', Monaco, monospace;
+      font-weight: bold;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -32,8 +32,9 @@
       width: 100%;
       max-width: 900px;
       aspect-ratio: 4 / 3;
-      background: #000010;
+      background: #03030c;
       border: 4px solid #333355;
+      border-radius: 10px;
       box-shadow: 0 0 35px rgba(85, 255, 255, 0.25), inset 0 0 25px rgba(0, 0, 0, 0.9);
       overflow: hidden;
     }
@@ -52,14 +53,14 @@
       inset: 0;
       background: linear-gradient(
         rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.25) 50%
+        rgba(0, 0, 0, 0.22) 50%
       );
       background-size: 100% 4px;
       pointer-events: none;
       z-index: 10;
     }
 
-    /* HUD */
+    /* Bovenste HUD balk */
     #hud {
       position: absolute;
       top: 12px;
@@ -68,7 +69,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: clamp(10px, 1.6vw, 15px);
+      font-size: clamp(13px, 1.8vw, 18px);
+      letter-spacing: 1px;
       z-index: 5;
       pointer-events: none;
       text-shadow: 2px 2px 0 #000;
@@ -90,23 +92,25 @@
       background: #111122;
       color: #55ffff;
       border: 2px solid #55ffff;
+      border-radius: 6px;
       font-family: inherit;
-      font-size: clamp(9px, 1.3vw, 12px);
-      padding: 6px 10px;
+      font-weight: bold;
+      font-size: clamp(11px, 1.4vw, 14px);
+      padding: 6px 12px;
       cursor: pointer;
       transition: all 0.1s;
     }
 
     #sound-btn:hover {
       background: #55ffff;
-      color: #000;
+      color: #000000;
     }
 
-    /* Overlay schermen (Start / Game Over) */
+    /* Start- en Game Over-scherm */
     #overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 16, 0.82);
+      background: rgba(3, 3, 14, 0.86);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -121,18 +125,18 @@
     }
 
     h1 {
-      font-size: clamp(22px, 4.5vw, 44px);
+      font-size: clamp(28px, 5.5vw, 52px);
       color: #ff55ff;
       text-shadow: 4px 4px 0 #55ffff;
-      margin-bottom: 18px;
-      letter-spacing: 2px;
+      margin-bottom: 14px;
+      letter-spacing: 4px;
     }
 
     .subtitle {
-      font-size: clamp(10px, 1.6vw, 14px);
+      font-size: clamp(13px, 1.8vw, 17px);
       color: #ffff55;
-      margin-bottom: 24px;
-      line-height: 1.6;
+      margin-bottom: 20px;
+      line-height: 1.5;
     }
 
     .subtitle.negative {
@@ -140,12 +144,13 @@
     }
 
     .legend {
-      background: rgba(20, 20, 45, 0.9);
+      background: rgba(16, 16, 38, 0.95);
       border: 2px solid #55ffff;
-      padding: 14px 20px;
-      margin-bottom: 24px;
-      font-size: clamp(9px, 1.3vw, 12px);
-      line-height: 2;
+      border-radius: 8px;
+      padding: 16px 22px;
+      margin-bottom: 22px;
+      font-size: clamp(12px, 1.5vw, 15px);
+      line-height: 1.8;
       color: #ffffff;
       text-align: left;
     }
@@ -157,11 +162,13 @@
 
     #start-btn {
       background: #ff55ff;
-      color: #000;
+      color: #000000;
       border: 3px solid #ffffff;
+      border-radius: 8px;
       font-family: inherit;
-      font-size: clamp(13px, 2vw, 18px);
-      padding: 14px 28px;
+      font-weight: bold;
+      font-size: clamp(15px, 2.2vw, 20px);
+      padding: 14px 32px;
       cursor: pointer;
       box-shadow: 4px 4px 0 #55ffff;
       transition: transform 0.1s;
@@ -179,10 +186,11 @@
     }
 
     #controls-bar {
-      margin-top: 10px;
-      font-size: clamp(9px, 1.2vw, 11px);
+      margin-top: 12px;
+      font-size: clamp(11px, 1.4vw, 14px);
       color: #8888aa;
       text-align: center;
+      padding: 0 10px;
     }
   </style>
 </head>
@@ -196,7 +204,7 @@
       </div>
       <div class="hud-group">
         <div>GOLF: <span id="wave" class="wave-val">1</span></div>
-        <button id="sound-btn" title="Geluid aan/uit">GELUID: AAN</button>
+        <button id="sound-btn" type="button" title="Geluid aan of uit">GELUID: AAN</button>
       </div>
     </div>
 
@@ -205,18 +213,18 @@
 
     <div id="overlay">
       <h1 id="overlay-title">PARATROOPER</h1>
-      <p id="overlay-subtitle" class="subtitle">VERDEDIG JE BASIS TEGEN PARACHUTISTEN!</p>
+      <p id="overlay-subtitle" class="subtitle">VERDEDIG JE BASIS TEGEN LANDENDE PARACHUTISTEN!</p>
       
-      <div class="legend" id="legend-box">
-        <div><span class="cyan">HELIKOPTER / VLIEGTUIG:</span> +25 PT</div>
+      <div class="legend">
+        <div><span class="cyan">HELIKOPTER / JET:</span> +25 PT</div>
         <div><span class="yellow">PARACHUTE KAPOT:</span> +15 PT (VALT TE PLETTER)</div>
         <div><span class="magenta">PARACHUTIST RAKEN:</span> +25 PT</div>
-        <div><span class="red">ELK SCHOT:</span> -1 PT (SCORE KAN NEGATIEF!)</div>
-        <div><span class="red">LET OP:</span> 4 GELAND AAN 1 KANT = AANVAL!</div>
+        <div><span class="red">ELK SCHOT KOST:</span> -1 PT (SCORE KAN NEGATIEF!)</div>
+        <div><span class="red">GEVAAR:</span> 4 GELAND AAN 1 KANT = AANVAL!</div>
         <div style="margin-top:8px; color:#55ff55;">MUIS = RICHTEN &amp; KLIKKEN | PIJLTJES + SPATIE</div>
       </div>
 
-      <button id="start-btn">START SPEL</button>
+      <button id="start-btn" type="button">START SPEL</button>
     </div>
   </div>
 
@@ -225,781 +233,863 @@
   </div>
 
   <script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+    (function () {
+      'use strict';
 
-    // UI Elementen
-    const scoreEl = document.getElementById('score');
-    const highScoreEl = document.getElementById('highscore');
-    const waveEl = document.getElementById('wave');
-    const overlay = document.getElementById('overlay');
-    const overlayTitle = document.getElementById('overlay-title');
-    const overlaySubtitle = document.getElementById('overlay-subtitle');
-    const startBtn = document.getElementById('start-btn');
-    const soundBtn = document.getElementById('sound-btn');
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
 
-    // Audio Synthesizer (Retro Web Audio API)
-    let audioCtx = null;
-    let soundEnabled = true;
+      // DOM-referenties
+      const scoreEl = document.getElementById('score');
+      const highScoreEl = document.getElementById('highscore');
+      const waveEl = document.getElementById('wave');
+      const overlay = document.getElementById('overlay');
+      const overlayTitle = document.getElementById('overlay-title');
+      const overlaySubtitle = document.getElementById('overlay-subtitle');
+      const startBtn = document.getElementById('start-btn');
+      const soundBtn = document.getElementById('sound-btn');
 
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // ==========================================
+      // 1. WEB AUDIO SYNTHESIZER (MET FOUTAFHANDELING)
+      // ==========================================
+      let audioCtx = null;
+      let soundEnabled = true;
+
+      function initAudio() {
+        try {
+          if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+              audioCtx = new AudioContextClass();
+            }
+          }
+          if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+        } catch (err) {
+          // Negeer audio-fouten zodat het spel altijd blijft werken
+        }
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+
+      function playSound(type) {
+        if (!soundEnabled || !audioCtx) return;
+        try {
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          if (type === 'shoot') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(880, now);
+            osc.frequency.exponentialRampToValueAtTime(180, now + 0.08);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            osc.start(now);
+            osc.stop(now + 0.08);
+          } else if (type === 'explosion') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(160, now);
+            osc.frequency.exponentialRampToValueAtTime(28, now + 0.35);
+            gain.gain.setValueAtTime(0.22, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc.start(now);
+            osc.stop(now + 0.35);
+          } else if (type === 'chute') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.exponentialRampToValueAtTime(210, now + 0.14);
+            gain.gain.setValueAtTime(0.14, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+            osc.start(now);
+            osc.stop(now + 0.14);
+          } else if (type === 'land') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.setValueAtTime(105, now + 0.06);
+            gain.gain.setValueAtTime(0.11, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.start(now);
+            osc.stop(now + 0.12);
+          } else if (type === 'splat') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(95, now);
+            osc.frequency.linearRampToValueAtTime(38, now + 0.18);
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+            osc.start(now);
+            osc.stop(now + 0.18);
+          } else if (type === 'gameover') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.linearRampToValueAtTime(220, now + 0.25);
+            osc.frequency.linearRampToValueAtTime(150, now + 0.5);
+            osc.frequency.linearRampToValueAtTime(60, now + 1.0);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+            osc.start(now);
+            osc.stop(now + 1.0);
+          }
+        } catch (err) {
+          // Veilig afvangen van audio-fouten
+        }
       }
-    }
 
-    function playSound(type) {
-      if (!soundEnabled || !audioCtx) return;
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      if (type === 'shoot') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(880, now);
-        osc.frequency.exponentialRampToValueAtTime(180, now + 0.09);
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-        osc.start(now);
-        osc.stop(now + 0.09);
-      } else if (type === 'explosion') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(160, now);
-        osc.frequency.exponentialRampToValueAtTime(30, now + 0.35);
-        gain.gain.setValueAtTime(0.25, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-        osc.start(now);
-        osc.stop(now + 0.35);
-      } else if (type === 'chute') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(520, now);
-        osc.frequency.exponentialRampToValueAtTime(220, now + 0.14);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
-        osc.start(now);
-        osc.stop(now + 0.14);
-      } else if (type === 'land') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(140, now);
-        osc.frequency.setValueAtTime(110, now + 0.06);
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-        osc.start(now);
-        osc.stop(now + 0.12);
-      } else if (type === 'splat') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(95, now);
-        osc.frequency.linearRampToValueAtTime(40, now + 0.18);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-        osc.start(now);
-        osc.stop(now + 0.18);
-      } else if (type === 'gameover') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(300, now);
-        osc.frequency.linearRampToValueAtTime(220, now + 0.25);
-        osc.frequency.linearRampToValueAtTime(150, now + 0.5);
-        osc.frequency.linearRampToValueAtTime(65, now + 1.0);
-        gain.gain.setValueAtTime(0.28, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
-        osc.start(now);
-        osc.stop(now + 1.0);
-      }
-    }
-
-    soundBtn.addEventListener('click', () => {
-      soundEnabled = !soundEnabled;
-      soundBtn.textContent = soundEnabled ? 'GELUID: AAN' : 'GELUID: UIT';
-    });
-
-    // Game Constanten
-    const W = canvas.width;
-    const H = canvas.height;
-    const GROUND_Y = H - 36;
-    const TURRET_X = W / 2;
-    const TURRET_Y = GROUND_Y - 38;
-
-    // Score Formatter (ondersteunt negatieve getallen)
-    function formatScore(val) {
-      const sign = val < 0 ? '-' : '';
-      return sign + Math.abs(val).toString().padStart(5, '0');
-    }
-
-    // Game State
-    let gameState = 'MENU'; // MENU, PLAYING, ASSAULT, GAMEOVER
-    let score = 0;
-    let highScore = parseInt(localStorage.getItem('paratrooper_hi') || '0', 10);
-    highScoreEl.textContent = formatScore(highScore);
-    let wave = 1;
-    let frameCount = 0;
-
-    // Sterren achtergrond
-    const stars = Array.from({ length: 65 }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * (GROUND_Y - 60),
-      size: Math.random() < 0.7 ? 1 : 2,
-      blink: Math.random() * Math.PI * 2
-    }));
-
-    // Entiteiten
-    let turret = {
-      angle: -Math.PI / 2,
-      cooldown: 0,
-      alive: true
-    };
-
-    let bullets = [];
-    let aircrafts = [];
-    let paratroopers = [];
-    let landedLeft = [];
-    let landedRight = [];
-    let particles = [];
-    let floatingTexts = [];
-    let assaultSquad = null;
-
-    // Input State (uitsluitend muis en toetsenbord)
-    const keys = {};
-    let mousePos = { x: W / 2, y: H / 2 };
-    let isMouseDown = false;
-
-    window.addEventListener('keydown', (e) => {
-      keys[e.code] = true;
-      if (e.code === 'Space' && gameState === 'PLAYING') {
-        e.preventDefault();
-        fireBullet();
-      }
-    });
-
-    window.addEventListener('keyup', (e) => {
-      keys[e.code] = false;
-    });
-
-    function updateMouseCoords(clientX, clientY) {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = W / rect.width;
-      const scaleY = H / rect.height;
-      mousePos.x = (clientX - rect.left) * scaleX;
-      mousePos.y = (clientY - rect.top) * scaleY;
-
-      const dx = mousePos.x - TURRET_X;
-      const dy = mousePos.y - TURRET_Y;
-      let angle = Math.atan2(dy, dx);
-      // Beperk hoek tussen -168 graden en -12 graden
-      const minAngle = -Math.PI + 0.18;
-      const maxAngle = -0.18;
-      if (angle > 0) {
-        angle = dx < 0 ? minAngle : maxAngle;
-      } else {
-        angle = Math.max(minAngle, Math.min(maxAngle, angle));
-      }
-      turret.angle = angle;
-    }
-
-    canvas.addEventListener('mousemove', (e) => {
-      updateMouseCoords(e.clientX, e.clientY);
-    });
-
-    canvas.addEventListener('mousedown', (e) => {
-      if (e.button === 0) {
+      soundBtn.addEventListener('click', function () {
         initAudio();
-        updateMouseCoords(e.clientX, e.clientY);
-        isMouseDown = true;
-        if (gameState === 'PLAYING') fireBullet();
-      }
-    });
+        soundEnabled = !soundEnabled;
+        soundBtn.textContent = soundEnabled ? 'GELUID: AAN' : 'GELUID: UIT';
+      });
 
-    window.addEventListener('mouseup', () => {
-      isMouseDown = false;
-    });
+      // ==========================================
+      // 2. SPELCONSTANTEN & STATUS
+      // ==========================================
+      const W = canvas.width;
+      const H = canvas.height;
+      const GROUND_Y = H - 36;
+      const TURRET_X = W / 2;
+      const TURRET_Y = GROUND_Y - 38;
 
-    // Hulpfuncties
-    function updateScoreUI() {
-      scoreEl.textContent = formatScore(score);
-      if (score < 0) {
-        scoreEl.classList.add('negative');
-      } else {
-        scoreEl.classList.remove('negative');
-      }
-    }
-
-    function addScore(pts, x, y, color = '#ffff55') {
-      score += pts;
-      updateScoreUI();
-
-      if (score > highScore) {
-        highScore = score;
-        highScoreEl.textContent = formatScore(highScore);
-        localStorage.setItem('paratrooper_hi', highScore);
+      function formatScore(val) {
+        const sign = val < 0 ? '-' : '';
+        return sign + Math.abs(val).toString().padStart(5, '0');
       }
 
-      // Golf verhogen elke 350 punten (blijft minimaal 1)
-      const newWave = Math.max(1, Math.floor(score / 350) + 1);
-      if (newWave > wave) {
-        wave = newWave;
-        waveEl.textContent = wave;
-        floatingTexts.push({
-          x: W / 2,
-          y: 120,
-          text: `GOLF ${wave}!`,
-          color: '#55ff55',
-          life: 90,
-          vy: -0.4
+      let highScore = 0;
+      try {
+        highScore = parseInt(localStorage.getItem('paratrooper_hi') || '0', 10) || 0;
+      } catch (e) {
+        highScore = 0;
+      }
+      highScoreEl.textContent = formatScore(highScore);
+
+      let gameState = 'MENU'; // 'MENU', 'PLAYING', 'ASSAULT', 'GAMEOVER'
+      let score = 0;
+      let wave = 1;
+      let frameCount = 0;
+
+      // Sterrenhemel
+      const stars = [];
+      for (let i = 0; i < 65; i++) {
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * (GROUND_Y - 60),
+          size: Math.random() < 0.7 ? 1 : 2,
+          blink: Math.random() * Math.PI * 2
         });
       }
 
-      if (x !== undefined && y !== undefined) {
-        floatingTexts.push({
-          x,
-          y,
-          text: pts > 0 ? `+${pts}` : `${pts}`,
-          color,
-          life: 45,
-          vy: -0.8
-        });
-      }
-    }
-
-    function createExplosion(x, y, colors = ['#ff5555', '#ffff55', '#ffffff', '#ff55ff'], count = 22) {
-      for (let i = 0; i < count; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 1 + Math.random() * 4.5;
-        particles.push({
-          x,
-          y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          size: 2 + Math.floor(Math.random() * 3),
-          life: 25 + Math.floor(Math.random() * 25)
-        });
-      }
-    }
-
-    function fireBullet() {
-      if (turret.cooldown > 0 || !turret.alive || gameState !== 'PLAYING') return;
-      const barrelLen = 30;
-      const bx = TURRET_X + Math.cos(turret.angle) * barrelLen;
-      const by = TURRET_Y + Math.sin(turret.angle) * barrelLen;
-      const speed = 9.5;
-
-      bullets.push({
-        x: bx,
-        y: by,
-        vx: Math.cos(turret.angle) * speed,
-        vy: Math.sin(turret.angle) * speed
-      });
-
-      turret.cooldown = 11;
-      // Elke kogel kost 1 punt; score mag onder 0 zakken
-      score -= 1;
-      updateScoreUI();
-      playSound('shoot');
-    }
-
-    function spawnAircraft() {
-      const fromLeft = Math.random() < 0.5;
-      const isJet = wave >= 2 && Math.random() < Math.min(0.45, (wave - 1) * 0.12);
-      const y = 55 + Math.random() * 115;
-      const baseSpeed = isJet ? (3.6 + wave * 0.25) : (2.0 + wave * 0.18);
-
-      aircrafts.push({
-        x: fromLeft ? -55 : W + 55,
-        y,
-        dir: fromLeft ? 1 : -1,
-        speed: baseSpeed,
-        type: isJet ? 'jet' : 'heli',
-        rotorTick: 0,
-        dropsLeft: isJet ? 1 : (1 + Math.floor(Math.random() * 2)),
-        nextDropX: fromLeft
-          ? (80 + Math.random() * (W - 160))
-          : (W - 80 - Math.random() * (W - 160))
-      });
-    }
-
-    function spawnParatrooper(x, y) {
-      // Zorg dat ze niet midden op de bunker landen
-      if (Math.abs(x - TURRET_X) < 58) {
-        x += x < TURRET_X ? -62 : 62;
-      }
-      x = Math.max(24, Math.min(W - 24, x));
-
-      paratroopers.push({
-        x,
-        y: y + 14,
-        vy: 1.15 + Math.min(0.8, wave * 0.06),
-        hasChute: true,
-        fallSpeed: 0,
-        swayOffset: Math.random() * Math.PI * 2
-      });
-    }
-
-    function triggerAssault(side) {
-      gameState = 'ASSAULT';
-      const troopers = side === 'left' ? landedLeft : landedRight;
-      assaultSquad = {
-        side,
-        phase: 'MARCH',
-        timer: 0,
-        troopers: troopers.map((t, idx) => ({
-          x: t.x,
-          y: GROUND_Y,
-          targetOffset: idx
-        }))
-      };
-    }
-
-    function startGame() {
-      initAudio();
-      score = 0;
-      wave = 1;
-      updateScoreUI();
-      waveEl.textContent = '1';
-      frameCount = 0;
-
-      turret = {
+      // Spelobjecten
+      let turret = {
         angle: -Math.PI / 2,
         cooldown: 0,
         alive: true
       };
 
-      bullets = [];
-      aircrafts = [];
-      paratroopers = [];
-      landedLeft = [];
-      landedRight = [];
-      particles = [];
-      floatingTexts = [];
-      assaultSquad = null;
+      let bullets = [];
+      let aircrafts = [];
+      let paratroopers = [];
+      let landedLeft = [];
+      let landedRight = [];
+      let particles = [];
+      let floatingTexts = [];
+      let assaultSquad = null;
 
-      overlaySubtitle.classList.remove('negative');
-      gameState = 'PLAYING';
-      overlay.classList.add('hidden');
-      spawnAircraft();
-    }
+      // ==========================================
+      // 3. MUIS & TOETSENBORD BESTURING (GEEN TOUCH)
+      // ==========================================
+      const keys = {};
+      let isMouseDown = false;
 
-    startBtn.addEventListener('click', startGame);
-
-    function endGame() {
-      gameState = 'GAMEOVER';
-      turret.alive = false;
-      createExplosion(TURRET_X, TURRET_Y + 12, ['#ff5555', '#ffff55', '#ffffff', '#55ffff'], 65);
-      playSound('gameover');
-
-      setTimeout(() => {
-        overlayTitle.textContent = 'GAME OVER';
-        overlaySubtitle.textContent = `EINDSCORE: ${score} PUNTEN (GOLF ${wave})`;
-        if (score < 0) {
-          overlaySubtitle.classList.add('negative');
-        } else {
-          overlaySubtitle.classList.remove('negative');
+      window.addEventListener('keydown', function (e) {
+        keys[e.code] = true;
+        if (e.code === 'Space' || e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+          e.preventDefault();
         }
-        startBtn.textContent = 'OPNIEUW SPELEN';
-        overlay.classList.remove('hidden');
-      }, 1300);
-    }
-
-    // UPDATE LOOP
-    function update() {
-      frameCount++;
-
-      // Toetsenbord besturing
-      if (gameState === 'PLAYING') {
-        const rotSpeed = 0.048;
-        if (keys['ArrowLeft'] || keys['KeyA']) {
-          turret.angle = Math.max(-Math.PI + 0.18, turret.angle - rotSpeed);
-        }
-        if (keys['ArrowRight'] || keys['KeyD']) {
-          turret.angle = Math.min(-0.18, turret.angle + rotSpeed);
-        }
-        if (keys['Space'] || isMouseDown) {
+        if (e.code === 'Space' && gameState === 'PLAYING') {
+          initAudio();
           fireBullet();
         }
-      }
+      });
 
-      if (turret.cooldown > 0) turret.cooldown--;
+      window.addEventListener('keyup', function (e) {
+        keys[e.code] = false;
+      });
 
-      // Spawn vliegtuigen & helikopters
-      if (gameState === 'PLAYING') {
-        const spawnInterval = Math.max(55, 135 - wave * 10);
-        if (frameCount % spawnInterval === 0 || aircrafts.length === 0) {
-          if (aircrafts.length < 3 + Math.floor(wave / 2)) {
-            spawnAircraft();
-          }
-        }
-      }
+      function aimTurretAtClientCoords(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
 
-      // Update Kogels
-      for (let i = bullets.length - 1; i >= 0; i--) {
-        const b = bullets[i];
-        b.x += b.vx;
-        b.y += b.vy;
+        const scaleX = W / rect.width;
+        const scaleY = H / rect.height;
+        const mx = (clientX - rect.left) * scaleX;
+        const my = (clientY - rect.top) * scaleY;
 
-        if (b.x < 0 || b.x > W || b.y < 0 || b.y > GROUND_Y) {
-          bullets.splice(i, 1);
-          continue;
-        }
+        const dx = mx - TURRET_X;
+        const dy = my - TURRET_Y;
+        let angle = Math.atan2(dy, dx);
 
-        let bulletHit = false;
+        const minAngle = -Math.PI + 0.16;
+        const maxAngle = -0.16;
 
-        // Check botsing met Vliegtuigen
-        for (let j = aircrafts.length - 1; j >= 0; j--) {
-          const a = aircrafts[j];
-          if (Math.abs(b.x - a.x) < 26 && Math.abs(b.y - a.y) < 14) {
-            createExplosion(a.x, a.y, ['#55ffff', '#ff55ff', '#ffff55'], 26);
-            playSound('explosion');
-            addScore(25, a.x, a.y - 10, '#55ffff');
-            aircrafts.splice(j, 1);
-            bulletHit = true;
-            break;
-          }
-        }
-
-        if (bulletHit) {
-          bullets.splice(i, 1);
-          continue;
-        }
-
-        // Check botsing met Parachutisten
-        for (let j = paratroopers.length - 1; j >= 0; j--) {
-          const p = paratroopers[j];
-
-          // 1. Check Parachute hitbox (boven het poppetje)
-          if (p.hasChute && Math.abs(b.x - p.x) < 16 && b.y >= p.y - 26 && b.y <= p.y - 8) {
-            p.hasChute = false;
-            p.fallSpeed = 1.5;
-            createExplosion(p.x, p.y - 16, ['#ffffff', '#55ffff'], 10);
-            playSound('chute');
-            addScore(15, p.x, p.y - 24, '#ffff55');
-            bulletHit = true;
-            break;
-          }
-
-          // 2. Check Poppetje hitbox
-          if (Math.abs(b.x - p.x) < 10 && Math.abs(b.y - p.y) < 12) {
-            createExplosion(p.x, p.y, ['#ff55ff', '#ffff55', '#ff5555'], 18);
-            playSound('explosion');
-            addScore(25, p.x, p.y - 10, '#ff55ff');
-            paratroopers.splice(j, 1);
-            bulletHit = true;
-            break;
-          }
-        }
-
-        if (bulletHit) {
-          bullets.splice(i, 1);
-        }
-      }
-
-      // Update Vliegtuigen
-      for (let i = aircrafts.length - 1; i >= 0; i--) {
-        const a = aircrafts[i];
-        a.x += a.dir * a.speed;
-        a.rotorTick++;
-
-        // Drop parachutist
-        if (gameState === 'PLAYING' && a.dropsLeft > 0) {
-          const passedDrop = (a.dir === 1 && a.x >= a.nextDropX) || (a.dir === -1 && a.x <= a.nextDropX);
-          if (passedDrop) {
-            spawnParatrooper(a.x, a.y);
-            a.dropsLeft--;
-            if (a.dropsLeft > 0) {
-              a.nextDropX = a.x + a.dir * (90 + Math.random() * 140);
-            }
-          }
-        }
-
-        if ((a.dir === 1 && a.x > W + 70) || (a.dir === -1 && a.x < -70)) {
-          aircrafts.splice(i, 1);
-        }
-      }
-
-      // Update Parachutisten
-      for (let i = paratroopers.length - 1; i >= 0; i--) {
-        const p = paratroopers[i];
-
-        if (p.hasChute) {
-          p.y += p.vy;
-          p.x += Math.sin(frameCount * 0.04 + p.swayOffset) * 0.35;
+        if (angle > 0) {
+          angle = dx < 0 ? minAngle : maxAngle;
         } else {
-          p.fallSpeed += 0.22; // Zwaartekracht
-          p.y += p.fallSpeed;
+          angle = Math.max(minAngle, Math.min(maxAngle, angle));
         }
+        turret.angle = angle;
+      }
 
-        // Bereik de grond
-        if (p.y >= GROUND_Y - 8) {
-          if (!p.hasChute) {
-            // Te pletter gevallen
-            createExplosion(p.x, GROUND_Y - 4, ['#ff5555', '#ffaa00'], 14);
-            playSound('splat');
-            addScore(10, p.x, GROUND_Y - 18, '#55ff55');
-            paratroopers.splice(i, 1);
-          } else {
-            // Veilig geland
-            playSound('land');
-            const landedObj = { x: p.x, y: GROUND_Y };
-            if (p.x < TURRET_X) {
-              landedLeft.push(landedObj);
-              if (landedLeft.length >= 4 && gameState === 'PLAYING') {
-                triggerAssault('left');
-              }
-            } else {
-              landedRight.push(landedObj);
-              if (landedRight.length >= 4 && gameState === 'PLAYING') {
-                triggerAssault('right');
-              }
-            }
-            paratroopers.splice(i, 1);
+      canvas.addEventListener('mousemove', function (e) {
+        aimTurretAtClientCoords(e.clientX, e.clientY);
+      });
+
+      canvas.addEventListener('mousedown', function (e) {
+        if (e.button === 0) {
+          initAudio();
+          aimTurretAtClientCoords(e.clientX, e.clientY);
+          isMouseDown = true;
+          if (gameState === 'PLAYING') {
+            fireBullet();
           }
+        }
+      });
+
+      window.addEventListener('mouseup', function () {
+        isMouseDown = false;
+      });
+
+      // ==========================================
+      // 4. SCORE & SPELMECHANIEK
+      // ==========================================
+      function updateScoreUI() {
+        scoreEl.textContent = formatScore(score);
+        if (score < 0) {
+          scoreEl.classList.add('negative');
+        } else {
+          scoreEl.classList.remove('negative');
         }
       }
 
-      // Update Aanvalspiramide (ASSAULT)
-      if (gameState === 'ASSAULT' && assaultSquad) {
-        const dir = assaultSquad.side === 'left' ? 1 : -1;
-        const baseStopX = TURRET_X - dir * 56;
-        const t = assaultSquad.troopers;
+      function addScore(pts, x, y, color) {
+        score += pts;
+        updateScoreUI();
 
-        if (assaultSquad.phase === 'MARCH') {
-          let allInPosition = true;
-          t.sort((a, b) => assaultSquad.side === 'left' ? b.x - a.x : a.x - b.x);
+        if (score > highScore) {
+          highScore = score;
+          highScoreEl.textContent = formatScore(highScore);
+          try {
+            localStorage.setItem('paratrooper_hi', String(highScore));
+          } catch (e) {
+            // Negeer opslagfouten in strikte browsers
+          }
+        }
 
-          t.forEach((soldier, idx) => {
-            const targetX = baseStopX - dir * (idx * 18);
-            if (Math.abs(soldier.x - targetX) > 2) {
-              soldier.x += Math.sign(targetX - soldier.x) * 2.2;
-              allInPosition = false;
-            }
+        const newWave = Math.max(1, Math.floor(score / 350) + 1);
+        if (newWave > wave) {
+          wave = newWave;
+          waveEl.textContent = wave;
+          floatingTexts.push({
+            x: W / 2,
+            y: 120,
+            text: 'GOLF ' + wave + '!',
+            color: '#55ff55',
+            life: 90,
+            vy: -0.4
           });
+        }
 
-          if (allInPosition) {
-            assaultSquad.phase = 'CLIMB';
-            assaultSquad.timer = 0;
-          }
-        } else if (assaultSquad.phase === 'CLIMB') {
-          assaultSquad.timer++;
-          if (t[1]) {
-            t[1].x += ((baseStopX - dir * 6) - t[1].x) * 0.08;
-            t[1].y += ((GROUND_Y - 16) - t[1].y) * 0.08;
-          }
-          if (t[2]) {
-            t[2].x += ((baseStopX + dir * 6) - t[2].x) * 0.07;
-            t[2].y += ((GROUND_Y - 32) - t[2].y) * 0.07;
-          }
-          if (t[3] && assaultSquad.timer > 35) {
-            t[3].x += (TURRET_X - t[3].x) * 0.08;
-            t[3].y += ((TURRET_Y + 6) - t[3].y) * 0.08;
-          }
-
-          if (assaultSquad.timer > 95) {
-            endGame();
-          }
+        if (x !== undefined && y !== undefined) {
+          floatingTexts.push({
+            x: x,
+            y: y,
+            text: pts > 0 ? '+' + pts : String(pts),
+            color: color || '#ffff55',
+            life: 45,
+            vy: -0.8
+          });
         }
       }
 
-      // Update Deeltjes
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const pt = particles[i];
-        pt.x += pt.vx;
-        pt.y += pt.vy;
-        pt.vy += 0.08;
-        pt.life--;
-        if (pt.life <= 0) particles.splice(i, 1);
+      function createExplosion(x, y, colors, count) {
+        const palette = colors || ['#ff5555', '#ffff55', '#ffffff', '#ff55ff'];
+        const total = count || 22;
+        for (let i = 0; i < total; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 1 + Math.random() * 4.5;
+          particles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            color: palette[Math.floor(Math.random() * palette.length)],
+            size: 2 + Math.floor(Math.random() * 3),
+            life: 24 + Math.floor(Math.random() * 24)
+          });
+        }
       }
 
-      // Update Zwevende Tekst
-      for (let i = floatingTexts.length - 1; i >= 0; i--) {
-        const ft = floatingTexts[i];
-        ft.y += ft.vy;
-        ft.life--;
-        if (ft.life <= 0) floatingTexts.splice(i, 1);
-      }
-    }
+      function fireBullet() {
+        if (turret.cooldown > 0 || !turret.alive || gameState !== 'PLAYING') return;
 
-    // DRAW FUNCTIES
-    function drawTrooper(x, y, hasChute, isFalling = false) {
-      ctx.save();
-      ctx.translate(Math.round(x), Math.round(y));
+        const barrelLen = 30;
+        const bx = TURRET_X + Math.cos(turret.angle) * barrelLen;
+        const by = TURRET_Y + Math.sin(turret.angle) * barrelLen;
+        const speed = 10;
 
-      // Parachute tekenen
-      if (hasChute) {
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(-13, -15);
-        ctx.lineTo(-3, -4);
-        ctx.moveTo(13, -15);
-        ctx.lineTo(3, -4);
-        ctx.moveTo(0, -16);
-        ctx.lineTo(0, -5);
-        ctx.stroke();
+        bullets.push({
+          x: bx,
+          y: by,
+          vx: Math.cos(turret.angle) * speed,
+          vy: Math.sin(turret.angle) * speed
+        });
 
-        ctx.fillStyle = '#ff55ff';
-        ctx.beginPath();
-        ctx.arc(0, -15, 14, Math.PI, 0, false);
-        ctx.fill();
+        turret.cooldown = 10;
 
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(0, -15, 7, Math.PI, 0, false);
-        ctx.fill();
+        // Elk schot kost 1 punt; score mag negatief worden!
+        score -= 1;
+        updateScoreUI();
+        playSound('shoot');
       }
 
-      // Poppetje (Retro pixel stijl)
-      ctx.fillStyle = '#ffff55';
-      ctx.fillRect(-3, -8, 6, 5);
+      function spawnAircraft() {
+        const fromLeft = Math.random() < 0.5;
+        const isJet = wave >= 2 && Math.random() < Math.min(0.45, (wave - 1) * 0.12);
+        const y = 55 + Math.random() * 115;
+        const baseSpeed = isJet ? (3.5 + wave * 0.25) : (2.0 + wave * 0.18);
 
-      ctx.fillStyle = '#55ffff';
-      ctx.fillRect(-4, -3, 8, 6);
-
-      ctx.fillStyle = '#ffff55';
-      if (isFalling && Math.floor(frameCount / 4) % 2 === 0) {
-        ctx.fillRect(-7, -7, 3, 4);
-        ctx.fillRect(4, -7, 3, 4);
-      } else {
-        ctx.fillRect(-6, -3, 2, 5);
-        ctx.fillRect(4, -3, 2, 5);
+        aircrafts.push({
+          x: fromLeft ? -55 : W + 55,
+          y: y,
+          dir: fromLeft ? 1 : -1,
+          speed: baseSpeed,
+          type: isJet ? 'jet' : 'heli',
+          rotorTick: 0,
+          dropsLeft: isJet ? 1 : (1 + Math.floor(Math.random() * 2)),
+          nextDropX: fromLeft
+            ? (80 + Math.random() * (W - 160))
+            : (W - 80 - Math.random() * (W - 160))
+        });
       }
 
-      ctx.fillStyle = '#ff55ff';
-      ctx.fillRect(-4, 3, 3, 5);
-      ctx.fillRect(1, 3, 3, 5);
+      function spawnParatrooper(x, y) {
+        // Voorkom dat parachutisten direct bovenop de centrale bunker landen
+        if (Math.abs(x - TURRET_X) < 60) {
+          x += x < TURRET_X ? -64 : 64;
+        }
+        x = Math.max(24, Math.min(W - 24, x));
 
-      ctx.restore();
-    }
+        paratroopers.push({
+          x: x,
+          y: y + 14,
+          vy: 1.15 + Math.min(0.8, wave * 0.06),
+          hasChute: true,
+          fallSpeed: 0,
+          swayOffset: Math.random() * Math.PI * 2
+        });
+      }
 
-    function drawAircraft(a) {
-      ctx.save();
-      ctx.translate(Math.round(a.x), Math.round(a.y));
-      ctx.scale(a.dir, 1);
+      function triggerAssault(side) {
+        gameState = 'ASSAULT';
+        const troopers = side === 'left' ? landedLeft : landedRight;
+        assaultSquad = {
+          side: side,
+          phase: 'MARCH',
+          timer: 0,
+          troopers: troopers.map(function (t, idx) {
+            return {
+              x: t.x,
+              y: GROUND_Y,
+              targetOffset: idx
+            };
+          })
+        };
+      }
 
-      if (a.type === 'heli') {
+      function startGame() {
+        initAudio();
+        score = 0;
+        wave = 1;
+        updateScoreUI();
+        waveEl.textContent = '1';
+        frameCount = 0;
+
+        turret = {
+          angle: -Math.PI / 2,
+          cooldown: 0,
+          alive: true
+        };
+
+        bullets = [];
+        aircrafts = [];
+        paratroopers = [];
+        landedLeft = [];
+        landedRight = [];
+        particles = [];
+        floatingTexts = [];
+        assaultSquad = null;
+
+        overlaySubtitle.classList.remove('negative');
+        gameState = 'PLAYING';
+        overlay.classList.add('hidden');
+        spawnAircraft();
+      }
+
+      startBtn.addEventListener('click', startGame);
+
+      function endGame() {
+        gameState = 'GAMEOVER';
+        turret.alive = false;
+        createExplosion(TURRET_X, TURRET_Y + 12, ['#ff5555', '#ffff55', '#ffffff', '#55ffff'], 65);
+        playSound('gameover');
+
+        setTimeout(function () {
+          overlayTitle.textContent = 'GAME OVER';
+          overlaySubtitle.textContent = 'EINDSCORE: ' + score + ' PUNTEN (GOLF ' + wave + ')';
+          if (score < 0) {
+            overlaySubtitle.classList.add('negative');
+          } else {
+            overlaySubtitle.classList.remove('negative');
+          }
+          startBtn.textContent = 'OPNIEUW SPELEN';
+          overlay.classList.remove('hidden');
+        }, 1250);
+      }
+
+      // ==========================================
+      // 5. UPDATE LOGICA
+      // ==========================================
+      function update() {
+        frameCount++;
+
+        if (gameState === 'PLAYING') {
+          const rotSpeed = 0.048;
+          if (keys['ArrowLeft'] || keys['KeyA']) {
+            turret.angle = Math.max(-Math.PI + 0.16, turret.angle - rotSpeed);
+          }
+          if (keys['ArrowRight'] || keys['KeyD']) {
+            turret.angle = Math.min(-0.16, turret.angle + rotSpeed);
+          }
+          if (keys['Space'] || isMouseDown) {
+            fireBullet();
+          }
+        }
+
+        if (turret.cooldown > 0) turret.cooldown--;
+
+        // Vliegtuigen spawnen
+        if (gameState === 'PLAYING') {
+          const spawnInterval = Math.max(55, 130 - wave * 10);
+          if (frameCount % spawnInterval === 0 || aircrafts.length === 0) {
+            if (aircrafts.length < 3 + Math.floor(wave / 2)) {
+              spawnAircraft();
+            }
+          }
+        }
+
+        // Kogels updaten & botsingen controleren
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i];
+          b.x += b.vx;
+          b.y += b.vy;
+
+          if (b.x < 0 || b.x > W || b.y < 0 || b.y > GROUND_Y) {
+            bullets.splice(i, 1);
+            continue;
+          }
+
+          let bulletHit = false;
+
+          // Botsing met vliegtuigen / helikopters
+          for (let j = aircrafts.length - 1; j >= 0; j--) {
+            const a = aircrafts[j];
+            if (Math.abs(b.x - a.x) < 28 && Math.abs(b.y - a.y) < 16) {
+              createExplosion(a.x, a.y, ['#55ffff', '#ff55ff', '#ffff55'], 26);
+              playSound('explosion');
+              addScore(25, a.x, a.y - 10, '#55ffff');
+              aircrafts.splice(j, 1);
+              bulletHit = true;
+              break;
+            }
+          }
+
+          if (bulletHit) {
+            bullets.splice(i, 1);
+            continue;
+          }
+
+          // Botsing met parachutisten & parachutes
+          for (let j = paratroopers.length - 1; j >= 0; j--) {
+            const p = paratroopers[j];
+
+            // 1. Parachute hitbox
+            if (p.hasChute && Math.abs(b.x - p.x) < 17 && b.y >= p.y - 28 && b.y <= p.y - 7) {
+              p.hasChute = false;
+              p.fallSpeed = 1.6;
+              createExplosion(p.x, p.y - 16, ['#ffffff', '#55ffff'], 10);
+              playSound('chute');
+              addScore(15, p.x, p.y - 24, '#ffff55');
+              bulletHit = true;
+              break;
+            }
+
+            // 2. Poppetje hitbox
+            if (Math.abs(b.x - p.x) < 11 && Math.abs(b.y - p.y) < 13) {
+              createExplosion(p.x, p.y, ['#ff55ff', '#ffff55', '#ff5555'], 18);
+              playSound('explosion');
+              addScore(25, p.x, p.y - 10, '#ff55ff');
+              paratroopers.splice(j, 1);
+              bulletHit = true;
+              break;
+            }
+          }
+
+          if (bulletHit) {
+            bullets.splice(i, 1);
+          }
+        }
+
+        // Vliegtuigen bewegen
+        for (let i = aircrafts.length - 1; i >= 0; i--) {
+          const a = aircrafts[i];
+          a.x += a.dir * a.speed;
+          a.rotorTick++;
+
+          if (gameState === 'PLAYING' && a.dropsLeft > 0) {
+            const passedDrop = (a.dir === 1 && a.x >= a.nextDropX) || (a.dir === -1 && a.x <= a.nextDropX);
+            if (passedDrop) {
+              spawnParatrooper(a.x, a.y);
+              a.dropsLeft--;
+              if (a.dropsLeft > 0) {
+                a.nextDropX = a.x + a.dir * (90 + Math.random() * 140);
+              }
+            }
+          }
+
+          if ((a.dir === 1 && a.x > W + 75) || (a.dir === -1 && a.x < -75)) {
+            aircrafts.splice(i, 1);
+          }
+        }
+
+        // Parachutisten laten dalen of vallen
+        for (let i = paratroopers.length - 1; i >= 0; i--) {
+          const p = paratroopers[i];
+
+          if (p.hasChute) {
+            p.y += p.vy;
+            p.x += Math.sin(frameCount * 0.04 + p.swayOffset) * 0.35;
+          } else {
+            p.fallSpeed += 0.22;
+            p.y += p.fallSpeed;
+          }
+
+          if (p.y >= GROUND_Y - 8) {
+            if (!p.hasChute) {
+              createExplosion(p.x, GROUND_Y - 4, ['#ff5555', '#ffaa00'], 14);
+              playSound('splat');
+              addScore(10, p.x, GROUND_Y - 18, '#55ff55');
+              paratroopers.splice(i, 1);
+            } else {
+              playSound('land');
+              const landedObj = { x: p.x, y: GROUND_Y };
+              if (p.x < TURRET_X) {
+                landedLeft.push(landedObj);
+                if (landedLeft.length >= 4 && gameState === 'PLAYING') {
+                  triggerAssault('left');
+                }
+              } else {
+                landedRight.push(landedObj);
+                if (landedRight.length >= 4 && gameState === 'PLAYING') {
+                  triggerAssault('right');
+                }
+              }
+              paratroopers.splice(i, 1);
+            }
+          }
+        }
+
+        // Aanvalspiramide animatie bij 4 gelande parachutisten aan 1 kant
+        if (gameState === 'ASSAULT' && assaultSquad) {
+          const dir = assaultSquad.side === 'left' ? 1 : -1;
+          const baseStopX = TURRET_X - dir * 56;
+          const t = assaultSquad.troopers;
+
+          if (assaultSquad.phase === 'MARCH') {
+            let allInPosition = true;
+            t.sort(function (a, b) {
+              return assaultSquad.side === 'left' ? b.x - a.x : a.x - b.x;
+            });
+
+            t.forEach(function (soldier, idx) {
+              const targetX = baseStopX - dir * (idx * 18);
+              if (Math.abs(soldier.x - targetX) > 2) {
+                soldier.x += Math.sign(targetX - soldier.x) * 2.2;
+                allInPosition = false;
+              }
+            });
+
+            if (allInPosition) {
+              assaultSquad.phase = 'CLIMB';
+              assaultSquad.timer = 0;
+            }
+          } else if (assaultSquad.phase === 'CLIMB') {
+            assaultSquad.timer++;
+            if (t[1]) {
+              t[1].x += ((baseStopX - dir * 6) - t[1].x) * 0.08;
+              t[1].y += ((GROUND_Y - 16) - t[1].y) * 0.08;
+            }
+            if (t[2]) {
+              t[2].x += ((baseStopX + dir * 6) - t[2].x) * 0.07;
+              t[2].y += ((GROUND_Y - 32) - t[2].y) * 0.07;
+            }
+            if (t[3] && assaultSquad.timer > 35) {
+              t[3].x += (TURRET_X - t[3].x) * 0.08;
+              t[3].y += ((TURRET_Y + 6) - t[3].y) * 0.08;
+            }
+
+            if (assaultSquad.timer > 95) {
+              endGame();
+            }
+          }
+        }
+
+        // Explosiedeeltjes updaten
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const pt = particles[i];
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.vy += 0.08;
+          pt.life--;
+          if (pt.life <= 0) particles.splice(i, 1);
+        }
+
+        // Zwevende score-teksten updaten
+        for (let i = floatingTexts.length - 1; i >= 0; i--) {
+          const ft = floatingTexts[i];
+          ft.y += ft.vy;
+          ft.life--;
+          if (ft.life <= 0) floatingTexts.splice(i, 1);
+        }
+      }
+
+      // ==========================================
+      // 6. TEKENFUNCTIES
+      // ==========================================
+      function drawTrooper(x, y, hasChute, isFalling) {
+        ctx.save();
+        ctx.translate(Math.round(x), Math.round(y));
+
+        if (hasChute) {
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(-13, -15);
+          ctx.lineTo(-3, -4);
+          ctx.moveTo(13, -15);
+          ctx.lineTo(3, -4);
+          ctx.moveTo(0, -16);
+          ctx.lineTo(0, -5);
+          ctx.stroke();
+
+          ctx.fillStyle = '#ff55ff';
+          ctx.beginPath();
+          ctx.arc(0, -15, 14, Math.PI, 0, false);
+          ctx.fill();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(0, -15, 7, Math.PI, 0, false);
+          ctx.fill();
+        }
+
+        // Hoofd
+        ctx.fillStyle = '#ffff55';
+        ctx.fillRect(-3, -8, 6, 5);
+
+        // Lijf
         ctx.fillStyle = '#55ffff';
-        ctx.fillRect(-16, -5, 28, 12);
-        ctx.fillRect(12, -2, 8, 8);
-        ctx.fillRect(-32, -2, 16, 4);
-        ctx.fillRect(-34, -7, 4, 10);
+        ctx.fillRect(-4, -3, 8, 6);
 
-        ctx.fillStyle = '#000022';
-        ctx.fillRect(6, -3, 8, 5);
+        // Armen
+        ctx.fillStyle = '#ffff55';
+        if (isFalling && Math.floor(frameCount / 4) % 2 === 0) {
+          ctx.fillRect(-7, -7, 3, 4);
+          ctx.fillRect(4, -7, 3, 4);
+        } else {
+          ctx.fillRect(-6, -3, 2, 5);
+          ctx.fillRect(4, -3, 2, 5);
+        }
 
+        // Benen
         ctx.fillStyle = '#ff55ff';
-        ctx.fillRect(-12, 7, 2, 4);
-        ctx.fillRect(6, 7, 2, 4);
-        ctx.fillRect(-16, 10, 28, 2);
+        ctx.fillRect(-4, 3, 3, 5);
+        ctx.fillRect(1, 3, 3, 5);
 
-        ctx.fillStyle = '#ffffff';
-        const rotorW = (a.rotorTick % 4 < 2) ? 46 : 12;
-        ctx.fillRect(-2 - rotorW / 2, -9, rotorW, 2);
-        ctx.fillRect(-3, -7, 2, 2);
-      } else {
+        ctx.restore();
+      }
+
+      function drawAircraft(a) {
+        ctx.save();
+        ctx.translate(Math.round(a.x), Math.round(a.y));
+        ctx.scale(a.dir, 1);
+
+        if (a.type === 'heli') {
+          ctx.fillStyle = '#55ffff';
+          ctx.fillRect(-16, -5, 28, 12);
+          ctx.fillRect(12, -2, 8, 8);
+          ctx.fillRect(-32, -2, 16, 4);
+          ctx.fillRect(-34, -7, 4, 10);
+
+          ctx.fillStyle = '#000022';
+          ctx.fillRect(6, -3, 8, 5);
+
+          ctx.fillStyle = '#ff55ff';
+          ctx.fillRect(-12, 7, 2, 4);
+          ctx.fillRect(6, 7, 2, 4);
+          ctx.fillRect(-16, 10, 28, 2);
+
+          ctx.fillStyle = '#ffffff';
+          const rotorW = (a.rotorTick % 4 < 2) ? 46 : 12;
+          ctx.fillRect(-2 - rotorW / 2, -9, rotorW, 2);
+          ctx.fillRect(-3, -7, 2, 2);
+        } else {
+          ctx.fillStyle = '#ff55ff';
+          ctx.beginPath();
+          ctx.moveTo(26, 2);
+          ctx.lineTo(-22, -6);
+          ctx.lineTo(-28, -12);
+          ctx.lineTo(-24, 6);
+          ctx.lineTo(14, 6);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = '#ffff55';
+          ctx.fillRect(2, -4, 10, 4);
+
+          if (a.rotorTick % 3 !== 0) {
+            ctx.fillStyle = '#ff5555';
+            ctx.fillRect(-35, -1, 8, 4);
+          }
+        }
+
+        ctx.restore();
+      }
+
+      function drawTurret() {
+        // Bunker basis
+        ctx.fillStyle = '#55ffff';
+        ctx.fillRect(TURRET_X - 44, GROUND_Y - 22, 88, 22);
+        ctx.fillStyle = '#2277aa';
+        ctx.fillRect(TURRET_X - 38, GROUND_Y - 16, 76, 16);
+
+        // Koepel
         ctx.fillStyle = '#ff55ff';
         ctx.beginPath();
-        ctx.moveTo(26, 2);
-        ctx.lineTo(-22, -6);
-        ctx.lineTo(-28, -12);
-        ctx.lineTo(-24, 6);
-        ctx.lineTo(14, 6);
-        ctx.closePath();
+        ctx.arc(TURRET_X, GROUND_Y - 22, 18, Math.PI, 0, false);
         ctx.fill();
+
+        if (!turret.alive) return;
+
+        // Draaiende loop
+        ctx.save();
+        ctx.translate(TURRET_X, TURRET_Y);
+        ctx.rotate(turret.angle);
 
         ctx.fillStyle = '#ffff55';
-        ctx.fillRect(2, -4, 10, 4);
+        ctx.fillRect(0, -4, 30, 8);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(26, -5, 5, 10);
 
-        if (a.rotorTick % 3 !== 0) {
-          ctx.fillStyle = '#ff5555';
-          ctx.fillRect(-35, -1, 8, 4);
+        ctx.restore();
+      }
+
+      function draw() {
+        ctx.fillStyle = '#03030c';
+        ctx.fillRect(0, 0, W, H);
+
+        // Sterren
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          const alpha = 0.4 + 0.6 * Math.abs(Math.sin(frameCount * 0.03 + s.blink));
+          ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+          ctx.fillRect(s.x, s.y, s.size, s.size);
+        }
+
+        // Grond
+        ctx.fillStyle = '#ff55ff';
+        ctx.fillRect(0, GROUND_Y, W, 4);
+        ctx.fillStyle = '#221133';
+        ctx.fillRect(0, GROUND_Y + 4, W, H - GROUND_Y - 4);
+
+        // Bunker & geschut
+        drawTurret();
+
+        // Vliegtuigen
+        for (let i = 0; i < aircrafts.length; i++) {
+          drawAircraft(aircrafts[i]);
+        }
+
+        // Vallende parachutisten
+        for (let i = 0; i < paratroopers.length; i++) {
+          const p = paratroopers[i];
+          drawTrooper(p.x, p.y, p.hasChute, !p.hasChute);
+        }
+
+        // Gelande parachutisten of aanvalsteam
+        if (gameState !== 'ASSAULT') {
+          for (let i = 0; i < landedLeft.length; i++) {
+            drawTrooper(landedLeft[i].x, landedLeft[i].y - 8, false, false);
+          }
+          for (let i = 0; i < landedRight.length; i++) {
+            drawTrooper(landedRight[i].x, landedRight[i].y - 8, false, false);
+          }
+        } else if (assaultSquad) {
+          for (let i = 0; i < assaultSquad.troopers.length; i++) {
+            const t = assaultSquad.troopers[i];
+            drawTrooper(t.x, t.y - 8, false, false);
+          }
+        }
+
+        // Kogels
+        ctx.fillStyle = '#ffff55';
+        for (let i = 0; i < bullets.length; i++) {
+          const b = bullets[i];
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Explosiedeeltjes
+        for (let i = 0; i < particles.length; i++) {
+          const pt = particles[i];
+          ctx.fillStyle = pt.color;
+          ctx.fillRect(pt.x, pt.y, pt.size, pt.size);
+        }
+
+        // Zwevende score-teksten
+        ctx.font = 'bold 14px "Courier New", Courier, monospace';
+        ctx.textAlign = 'center';
+        for (let i = 0; i < floatingTexts.length; i++) {
+          const ft = floatingTexts[i];
+          ctx.fillStyle = ft.color;
+          ctx.fillText(ft.text, ft.x, ft.y);
         }
       }
 
-      ctx.restore();
-    }
-
-    function drawTurret() {
-      ctx.fillStyle = '#55ffff';
-      ctx.fillRect(TURRET_X - 44, GROUND_Y - 22, 88, 22);
-      ctx.fillStyle = '#2277aa';
-      ctx.fillRect(TURRET_X - 38, GROUND_Y - 16, 76, 16);
-
-      ctx.fillStyle = '#ff55ff';
-      ctx.beginPath();
-      ctx.arc(TURRET_X, GROUND_Y - 22, 18, Math.PI, 0, false);
-      ctx.fill();
-
-      if (!turret.alive) return;
-
-      ctx.save();
-      ctx.translate(TURRET_X, TURRET_Y);
-      ctx.rotate(turret.angle);
-
-      ctx.fillStyle = '#ffff55';
-      ctx.fillRect(0, -4, 30, 8);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(26, -5, 5, 10);
-
-      ctx.restore();
-    }
-
-    function draw() {
-      ctx.fillStyle = '#03030c';
-      ctx.fillRect(0, 0, W, H);
-
-      stars.forEach(s => {
-        const alpha = 0.4 + 0.6 * Math.abs(Math.sin(frameCount * 0.03 + s.blink));
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-        ctx.fillRect(s.x, s.y, s.size, s.size);
-      });
-
-      ctx.fillStyle = '#ff55ff';
-      ctx.fillRect(0, GROUND_Y, W, 4);
-      ctx.fillStyle = '#221133';
-      ctx.fillRect(0, GROUND_Y + 4, W, H - GROUND_Y - 4);
-
-      drawTurret();
-      aircrafts.forEach(drawAircraft);
-
-      paratroopers.forEach(p => {
-        drawTrooper(p.x, p.y, p.hasChute, !p.hasChute);
-      });
-
-      if (gameState !== 'ASSAULT') {
-        landedLeft.forEach(t => drawTrooper(t.x, t.y - 8, false, false));
-        landedRight.forEach(t => drawTrooper(t.x, t.y - 8, false, false));
-      } else if (assaultSquad) {
-        assaultSquad.troopers.forEach(t => drawTrooper(t.x, t.y - 8, false, false));
+      // ==========================================
+      // 7. HOOFDLUS STARTEN
+      // ==========================================
+      function gameLoop() {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
       }
 
-      ctx.fillStyle = '#ffff55';
-      bullets.forEach(b => {
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      particles.forEach(pt => {
-        ctx.fillStyle = pt.color;
-        ctx.fillRect(pt.x, pt.y, pt.size, pt.size);
-      });
-
-      ctx.font = '12px "Press Start 2P", monospace';
-      ctx.textAlign = 'center';
-      floatingTexts.forEach(ft => {
-        ctx.fillStyle = ft.color;
-        ctx.fillText(ft.text, ft.x, ft.y);
-      });
-    }
-
-    function loop() {
-      update();
-      draw();
-      requestAnimationFrame(loop);
-    }
-
-    loop();
+      window.onload = function () {
+        requestAnimationFrame(gameLoop);
+      };
+    })();
   </script>
 </body>
 </html>
