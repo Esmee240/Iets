@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PARATROOPER - Retro Arcade</title>
   <style>
-    /* Volledig zelfstandige retro arcade styling zonder externe lettertypes */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       user-select: none;
-      -webkit-user-select: none;
     }
 
     body {
       background-color: #050508;
       color: #55ffff;
-      font-family: 'Courier New', Courier, 'Lucida Console', Monaco, monospace;
+      font-family: 'Courier New', Courier, monospace;
       font-weight: bold;
       display: flex;
       flex-direction: column;
@@ -32,9 +30,8 @@
       width: 100%;
       max-width: 900px;
       aspect-ratio: 4 / 3;
-      background: #03030c;
+      background: #000010;
       border: 4px solid #333355;
-      border-radius: 10px;
       box-shadow: 0 0 35px rgba(85, 255, 255, 0.25), inset 0 0 25px rgba(0, 0, 0, 0.9);
       overflow: hidden;
     }
@@ -47,38 +44,36 @@
       image-rendering: pixelated;
     }
 
-    /* Subtiel CRT scanline effect */
     .crt-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
         rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.22) 50%
+        rgba(0, 0, 0, 0.25) 50%
       );
       background-size: 100% 4px;
       pointer-events: none;
       z-index: 10;
     }
 
-    /* Bovenste HUD balk */
     #hud {
       position: absolute;
-      top: 12px;
-      left: 16px;
-      right: 16px;
+      top: 14px;
+      left: 18px;
+      right: 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: clamp(13px, 1.8vw, 18px);
-      letter-spacing: 1px;
+      font-size: clamp(14px, 2.2vw, 20px);
       z-index: 5;
       pointer-events: none;
       text-shadow: 2px 2px 0 #000;
+      letter-spacing: 1px;
     }
 
     .hud-group {
       display: flex;
-      gap: 18px;
+      gap: 22px;
       align-items: center;
     }
 
@@ -92,25 +87,22 @@
       background: #111122;
       color: #55ffff;
       border: 2px solid #55ffff;
-      border-radius: 6px;
       font-family: inherit;
       font-weight: bold;
-      font-size: clamp(11px, 1.4vw, 14px);
+      font-size: clamp(11px, 1.5vw, 14px);
       padding: 6px 12px;
       cursor: pointer;
-      transition: all 0.1s;
     }
 
     #sound-btn:hover {
       background: #55ffff;
-      color: #000000;
+      color: #000;
     }
 
-    /* Start- en Game Over-scherm */
     #overlay {
       position: absolute;
       inset: 0;
-      background: rgba(3, 3, 14, 0.86);
+      background: rgba(0, 0, 16, 0.85);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -125,7 +117,7 @@
     }
 
     h1 {
-      font-size: clamp(28px, 5.5vw, 52px);
+      font-size: clamp(28px, 5.5vw, 54px);
       color: #ff55ff;
       text-shadow: 4px 4px 0 #55ffff;
       margin-bottom: 14px;
@@ -133,9 +125,9 @@
     }
 
     .subtitle {
-      font-size: clamp(13px, 1.8vw, 17px);
+      font-size: clamp(13px, 2vw, 18px);
       color: #ffff55;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       line-height: 1.5;
     }
 
@@ -144,13 +136,12 @@
     }
 
     .legend {
-      background: rgba(16, 16, 38, 0.95);
+      background: rgba(15, 15, 38, 0.95);
       border: 2px solid #55ffff;
-      border-radius: 8px;
-      padding: 16px 22px;
-      margin-bottom: 22px;
-      font-size: clamp(12px, 1.5vw, 15px);
-      line-height: 1.8;
+      padding: 16px 24px;
+      margin-bottom: 26px;
+      font-size: clamp(12px, 1.6vw, 15px);
+      line-height: 1.9;
       color: #ffffff;
       text-align: left;
     }
@@ -162,16 +153,15 @@
 
     #start-btn {
       background: #ff55ff;
-      color: #000000;
+      color: #000;
       border: 3px solid #ffffff;
-      border-radius: 8px;
       font-family: inherit;
       font-weight: bold;
-      font-size: clamp(15px, 2.2vw, 20px);
+      font-size: clamp(16px, 2.4vw, 22px);
       padding: 14px 32px;
       cursor: pointer;
       box-shadow: 4px 4px 0 #55ffff;
-      transition: transform 0.1s;
+      letter-spacing: 2px;
     }
 
     #start-btn:hover {
@@ -190,7 +180,6 @@
       font-size: clamp(11px, 1.4vw, 14px);
       color: #8888aa;
       text-align: center;
-      padding: 0 10px;
     }
   </style>
 </head>
@@ -204,7 +193,7 @@
       </div>
       <div class="hud-group">
         <div>GOLF: <span id="wave" class="wave-val">1</span></div>
-        <button id="sound-btn" type="button" title="Geluid aan of uit">GELUID: AAN</button>
+        <button id="sound-btn" type="button">GELUID: AAN</button>
       </div>
     </div>
 
@@ -213,15 +202,15 @@
 
     <div id="overlay">
       <h1 id="overlay-title">PARATROOPER</h1>
-      <p id="overlay-subtitle" class="subtitle">VERDEDIG JE BASIS TEGEN LANDENDE PARACHUTISTEN!</p>
+      <p id="overlay-subtitle" class="subtitle">VERDEDIG JE BASIS TEGEN PARACHUTISTEN!</p>
       
       <div class="legend">
-        <div><span class="cyan">HELIKOPTER / JET:</span> +25 PT</div>
+        <div><span class="cyan">HELIKOPTER / VLIEGTUIG:</span> +25 PT</div>
         <div><span class="yellow">PARACHUTE KAPOT:</span> +15 PT (VALT TE PLETTER)</div>
         <div><span class="magenta">PARACHUTIST RAKEN:</span> +25 PT</div>
-        <div><span class="red">ELK SCHOT KOST:</span> -1 PT (SCORE KAN NEGATIEF!)</div>
-        <div><span class="red">GEVAAR:</span> 4 GELAND AAN 1 KANT = AANVAL!</div>
-        <div style="margin-top:8px; color:#55ff55;">MUIS = RICHTEN &amp; KLIKKEN | PIJLTJES + SPATIE</div>
+        <div><span class="red">ELK SCHOT:</span> -1 PT (SCORE KAN NEGATIEF!)</div>
+        <div><span class="red">LET OP:</span> 4 GELAND AAN 1 KANT = AANVAL!</div>
+        <div style="margin-top:10px; color:#55ff55;">MUIS = RICHTEN &amp; KLIKKEN | PIJLTJES + SPATIE</div>
       </div>
 
       <button id="start-btn" type="button">START SPEL</button>
@@ -233,13 +222,10 @@
   </div>
 
   <script>
-    (function () {
-      'use strict';
-
+    (function() {
       const canvas = document.getElementById('gameCanvas');
       const ctx = canvas.getContext('2d');
 
-      // DOM-referenties
       const scoreEl = document.getElementById('score');
       const highScoreEl = document.getElementById('highscore');
       const waveEl = document.getElementById('wave');
@@ -249,9 +235,6 @@
       const startBtn = document.getElementById('start-btn');
       const soundBtn = document.getElementById('sound-btn');
 
-      // ==========================================
-      // 1. WEB AUDIO SYNTHESIZER (MET FOUTAFHANDELING)
-      // ==========================================
       let audioCtx = null;
       let soundEnabled = true;
 
@@ -267,7 +250,7 @@
             audioCtx.resume();
           }
         } catch (err) {
-          // Negeer audio-fouten zodat het spel altijd blijft werken
+          // Negeer als audio niet wordt ondersteund
         }
       }
 
@@ -283,40 +266,40 @@
           if (type === 'shoot') {
             osc.type = 'square';
             osc.frequency.setValueAtTime(880, now);
-            osc.frequency.exponentialRampToValueAtTime(180, now + 0.08);
-            gain.gain.setValueAtTime(0.1, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            osc.frequency.exponentialRampToValueAtTime(180, now + 0.09);
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
             osc.start(now);
-            osc.stop(now + 0.08);
+            osc.stop(now + 0.09);
           } else if (type === 'explosion') {
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(160, now);
-            osc.frequency.exponentialRampToValueAtTime(28, now + 0.35);
-            gain.gain.setValueAtTime(0.22, now);
+            osc.frequency.exponentialRampToValueAtTime(30, now + 0.35);
+            gain.gain.setValueAtTime(0.25, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
             osc.start(now);
             osc.stop(now + 0.35);
           } else if (type === 'chute') {
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(520, now);
-            osc.frequency.exponentialRampToValueAtTime(210, now + 0.14);
-            gain.gain.setValueAtTime(0.14, now);
+            osc.frequency.exponentialRampToValueAtTime(220, now + 0.14);
+            gain.gain.setValueAtTime(0.15, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
             osc.start(now);
             osc.stop(now + 0.14);
           } else if (type === 'land') {
             osc.type = 'square';
             osc.frequency.setValueAtTime(140, now);
-            osc.frequency.setValueAtTime(105, now + 0.06);
-            gain.gain.setValueAtTime(0.11, now);
+            osc.frequency.setValueAtTime(110, now + 0.06);
+            gain.gain.setValueAtTime(0.12, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
             osc.start(now);
             osc.stop(now + 0.12);
           } else if (type === 'splat') {
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(95, now);
-            osc.frequency.linearRampToValueAtTime(38, now + 0.18);
-            gain.gain.setValueAtTime(0.18, now);
+            osc.frequency.linearRampToValueAtTime(40, now + 0.18);
+            gain.gain.setValueAtTime(0.2, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
             osc.start(now);
             osc.stop(now + 0.18);
@@ -325,26 +308,22 @@
             osc.frequency.setValueAtTime(300, now);
             osc.frequency.linearRampToValueAtTime(220, now + 0.25);
             osc.frequency.linearRampToValueAtTime(150, now + 0.5);
-            osc.frequency.linearRampToValueAtTime(60, now + 1.0);
-            gain.gain.setValueAtTime(0.25, now);
+            osc.frequency.linearRampToValueAtTime(65, now + 1.0);
+            gain.gain.setValueAtTime(0.28, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
             osc.start(now);
             osc.stop(now + 1.0);
           }
         } catch (err) {
-          // Veilig afvangen van audio-fouten
+          // Negeer audio fouten
         }
       }
 
-      soundBtn.addEventListener('click', function () {
-        initAudio();
+      soundBtn.addEventListener('click', function() {
         soundEnabled = !soundEnabled;
         soundBtn.textContent = soundEnabled ? 'GELUID: AAN' : 'GELUID: UIT';
       });
 
-      // ==========================================
-      // 2. SPELCONSTANTEN & STATUS
-      // ==========================================
       const W = canvas.width;
       const H = canvas.height;
       const GROUND_Y = H - 36;
@@ -364,12 +343,11 @@
       }
       highScoreEl.textContent = formatScore(highScore);
 
-      let gameState = 'MENU'; // 'MENU', 'PLAYING', 'ASSAULT', 'GAMEOVER'
+      let gameState = 'MENU';
       let score = 0;
       let wave = 1;
       let frameCount = 0;
 
-      // Sterrenhemel
       const stars = [];
       for (let i = 0; i < 65; i++) {
         stars.push({
@@ -380,7 +358,6 @@
         });
       }
 
-      // Spelobjecten
       let turret = {
         angle: -Math.PI / 2,
         cooldown: 0,
@@ -396,31 +373,24 @@
       let floatingTexts = [];
       let assaultSquad = null;
 
-      // ==========================================
-      // 3. MUIS & TOETSENBORD BESTURING (GEEN TOUCH)
-      // ==========================================
       const keys = {};
       let isMouseDown = false;
 
-      window.addEventListener('keydown', function (e) {
+      window.addEventListener('keydown', function(e) {
         keys[e.code] = true;
-        if (e.code === 'Space' || e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
-          e.preventDefault();
-        }
         if (e.code === 'Space' && gameState === 'PLAYING') {
-          initAudio();
+          e.preventDefault();
           fireBullet();
         }
       });
 
-      window.addEventListener('keyup', function (e) {
+      window.addEventListener('keyup', function(e) {
         keys[e.code] = false;
       });
 
-      function aimTurretAtClientCoords(clientX, clientY) {
+      function updateAimFromMouse(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) return;
-
         const scaleX = W / rect.width;
         const scaleY = H / rect.height;
         const mx = (clientX - rect.left) * scaleX;
@@ -429,10 +399,8 @@
         const dx = mx - TURRET_X;
         const dy = my - TURRET_Y;
         let angle = Math.atan2(dy, dx);
-
-        const minAngle = -Math.PI + 0.16;
-        const maxAngle = -0.16;
-
+        const minAngle = -Math.PI + 0.18;
+        const maxAngle = -0.18;
         if (angle > 0) {
           angle = dx < 0 ? minAngle : maxAngle;
         } else {
@@ -441,14 +409,14 @@
         turret.angle = angle;
       }
 
-      canvas.addEventListener('mousemove', function (e) {
-        aimTurretAtClientCoords(e.clientX, e.clientY);
+      canvas.addEventListener('mousemove', function(e) {
+        updateAimFromMouse(e.clientX, e.clientY);
       });
 
-      canvas.addEventListener('mousedown', function (e) {
+      canvas.addEventListener('mousedown', function(e) {
         if (e.button === 0) {
           initAudio();
-          aimTurretAtClientCoords(e.clientX, e.clientY);
+          updateAimFromMouse(e.clientX, e.clientY);
           isMouseDown = true;
           if (gameState === 'PLAYING') {
             fireBullet();
@@ -456,13 +424,10 @@
         }
       });
 
-      window.addEventListener('mouseup', function () {
+      window.addEventListener('mouseup', function() {
         isMouseDown = false;
       });
 
-      // ==========================================
-      // 4. SCORE & SPELMECHANIEK
-      // ==========================================
       function updateScoreUI() {
         scoreEl.textContent = formatScore(score);
         if (score < 0) {
@@ -481,9 +446,7 @@
           highScoreEl.textContent = formatScore(highScore);
           try {
             localStorage.setItem('paratrooper_hi', String(highScore));
-          } catch (e) {
-            // Negeer opslagfouten in strikte browsers
-          }
+          } catch (e) {}
         }
 
         const newWave = Math.max(1, Math.floor(score / 350) + 1);
@@ -504,7 +467,7 @@
           floatingTexts.push({
             x: x,
             y: y,
-            text: pts > 0 ? '+' + pts : String(pts),
+            text: pts > 0 ? '+' + pts : '' + pts,
             color: color || '#ffff55',
             life: 45,
             vy: -0.8
@@ -514,8 +477,8 @@
 
       function createExplosion(x, y, colors, count) {
         const palette = colors || ['#ff5555', '#ffff55', '#ffffff', '#ff55ff'];
-        const total = count || 22;
-        for (let i = 0; i < total; i++) {
+        const num = count || 22;
+        for (let i = 0; i < num; i++) {
           const angle = Math.random() * Math.PI * 2;
           const speed = 1 + Math.random() * 4.5;
           particles.push({
@@ -525,18 +488,17 @@
             vy: Math.sin(angle) * speed,
             color: palette[Math.floor(Math.random() * palette.length)],
             size: 2 + Math.floor(Math.random() * 3),
-            life: 24 + Math.floor(Math.random() * 24)
+            life: 25 + Math.floor(Math.random() * 25)
           });
         }
       }
 
       function fireBullet() {
         if (turret.cooldown > 0 || !turret.alive || gameState !== 'PLAYING') return;
-
         const barrelLen = 30;
         const bx = TURRET_X + Math.cos(turret.angle) * barrelLen;
         const by = TURRET_Y + Math.sin(turret.angle) * barrelLen;
-        const speed = 10;
+        const speed = 9.5;
 
         bullets.push({
           x: bx,
@@ -545,9 +507,7 @@
           vy: Math.sin(turret.angle) * speed
         });
 
-        turret.cooldown = 10;
-
-        // Elk schot kost 1 punt; score mag negatief worden!
+        turret.cooldown = 11;
         score -= 1;
         updateScoreUI();
         playSound('shoot');
@@ -557,7 +517,7 @@
         const fromLeft = Math.random() < 0.5;
         const isJet = wave >= 2 && Math.random() < Math.min(0.45, (wave - 1) * 0.12);
         const y = 55 + Math.random() * 115;
-        const baseSpeed = isJet ? (3.5 + wave * 0.25) : (2.0 + wave * 0.18);
+        const baseSpeed = isJet ? (3.6 + wave * 0.25) : (2.0 + wave * 0.18);
 
         aircrafts.push({
           x: fromLeft ? -55 : W + 55,
@@ -574,9 +534,8 @@
       }
 
       function spawnParatrooper(x, y) {
-        // Voorkom dat parachutisten direct bovenop de centrale bunker landen
-        if (Math.abs(x - TURRET_X) < 60) {
-          x += x < TURRET_X ? -64 : 64;
+        if (Math.abs(x - TURRET_X) < 58) {
+          x += x < TURRET_X ? -62 : 62;
         }
         x = Math.max(24, Math.min(W - 24, x));
 
@@ -597,7 +556,7 @@
           side: side,
           phase: 'MARCH',
           timer: 0,
-          troopers: troopers.map(function (t, idx) {
+          troopers: troopers.map(function(t, idx) {
             return {
               x: t.x,
               y: GROUND_Y,
@@ -644,7 +603,7 @@
         createExplosion(TURRET_X, TURRET_Y + 12, ['#ff5555', '#ffff55', '#ffffff', '#55ffff'], 65);
         playSound('gameover');
 
-        setTimeout(function () {
+        setTimeout(function() {
           overlayTitle.textContent = 'GAME OVER';
           overlaySubtitle.textContent = 'EINDSCORE: ' + score + ' PUNTEN (GOLF ' + wave + ')';
           if (score < 0) {
@@ -654,22 +613,19 @@
           }
           startBtn.textContent = 'OPNIEUW SPELEN';
           overlay.classList.remove('hidden');
-        }, 1250);
+        }, 1300);
       }
 
-      // ==========================================
-      // 5. UPDATE LOGICA
-      // ==========================================
       function update() {
         frameCount++;
 
         if (gameState === 'PLAYING') {
           const rotSpeed = 0.048;
           if (keys['ArrowLeft'] || keys['KeyA']) {
-            turret.angle = Math.max(-Math.PI + 0.16, turret.angle - rotSpeed);
+            turret.angle = Math.max(-Math.PI + 0.18, turret.angle - rotSpeed);
           }
           if (keys['ArrowRight'] || keys['KeyD']) {
-            turret.angle = Math.min(-0.16, turret.angle + rotSpeed);
+            turret.angle = Math.min(-0.18, turret.angle + rotSpeed);
           }
           if (keys['Space'] || isMouseDown) {
             fireBullet();
@@ -678,9 +634,8 @@
 
         if (turret.cooldown > 0) turret.cooldown--;
 
-        // Vliegtuigen spawnen
         if (gameState === 'PLAYING') {
-          const spawnInterval = Math.max(55, 130 - wave * 10);
+          const spawnInterval = Math.max(55, 135 - wave * 10);
           if (frameCount % spawnInterval === 0 || aircrafts.length === 0) {
             if (aircrafts.length < 3 + Math.floor(wave / 2)) {
               spawnAircraft();
@@ -688,7 +643,6 @@
           }
         }
 
-        // Kogels updaten & botsingen controleren
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i];
           b.x += b.vx;
@@ -701,10 +655,9 @@
 
           let bulletHit = false;
 
-          // Botsing met vliegtuigen / helikopters
           for (let j = aircrafts.length - 1; j >= 0; j--) {
             const a = aircrafts[j];
-            if (Math.abs(b.x - a.x) < 28 && Math.abs(b.y - a.y) < 16) {
+            if (Math.abs(b.x - a.x) < 26 && Math.abs(b.y - a.y) < 14) {
               createExplosion(a.x, a.y, ['#55ffff', '#ff55ff', '#ffff55'], 26);
               playSound('explosion');
               addScore(25, a.x, a.y - 10, '#55ffff');
@@ -719,14 +672,12 @@
             continue;
           }
 
-          // Botsing met parachutisten & parachutes
           for (let j = paratroopers.length - 1; j >= 0; j--) {
             const p = paratroopers[j];
 
-            // 1. Parachute hitbox
-            if (p.hasChute && Math.abs(b.x - p.x) < 17 && b.y >= p.y - 28 && b.y <= p.y - 7) {
+            if (p.hasChute && Math.abs(b.x - p.x) < 16 && b.y >= p.y - 26 && b.y <= p.y - 8) {
               p.hasChute = false;
-              p.fallSpeed = 1.6;
+              p.fallSpeed = 1.5;
               createExplosion(p.x, p.y - 16, ['#ffffff', '#55ffff'], 10);
               playSound('chute');
               addScore(15, p.x, p.y - 24, '#ffff55');
@@ -734,8 +685,7 @@
               break;
             }
 
-            // 2. Poppetje hitbox
-            if (Math.abs(b.x - p.x) < 11 && Math.abs(b.y - p.y) < 13) {
+            if (Math.abs(b.x - p.x) < 10 && Math.abs(b.y - p.y) < 12) {
               createExplosion(p.x, p.y, ['#ff55ff', '#ffff55', '#ff5555'], 18);
               playSound('explosion');
               addScore(25, p.x, p.y - 10, '#ff55ff');
@@ -750,7 +700,6 @@
           }
         }
 
-        // Vliegtuigen bewegen
         for (let i = aircrafts.length - 1; i >= 0; i--) {
           const a = aircrafts[i];
           a.x += a.dir * a.speed;
@@ -767,12 +716,11 @@
             }
           }
 
-          if ((a.dir === 1 && a.x > W + 75) || (a.dir === -1 && a.x < -75)) {
+          if ((a.dir === 1 && a.x > W + 70) || (a.dir === -1 && a.x < -70)) {
             aircrafts.splice(i, 1);
           }
         }
 
-        // Parachutisten laten dalen of vallen
         for (let i = paratroopers.length - 1; i >= 0; i--) {
           const p = paratroopers[i];
 
@@ -809,7 +757,6 @@
           }
         }
 
-        // Aanvalspiramide animatie bij 4 gelande parachutisten aan 1 kant
         if (gameState === 'ASSAULT' && assaultSquad) {
           const dir = assaultSquad.side === 'left' ? 1 : -1;
           const baseStopX = TURRET_X - dir * 56;
@@ -817,11 +764,11 @@
 
           if (assaultSquad.phase === 'MARCH') {
             let allInPosition = true;
-            t.sort(function (a, b) {
+            t.sort(function(a, b) {
               return assaultSquad.side === 'left' ? b.x - a.x : a.x - b.x;
             });
 
-            t.forEach(function (soldier, idx) {
+            t.forEach(function(soldier, idx) {
               const targetX = baseStopX - dir * (idx * 18);
               if (Math.abs(soldier.x - targetX) > 2) {
                 soldier.x += Math.sign(targetX - soldier.x) * 2.2;
@@ -854,7 +801,6 @@
           }
         }
 
-        // Explosiedeeltjes updaten
         for (let i = particles.length - 1; i >= 0; i--) {
           const pt = particles[i];
           pt.x += pt.vx;
@@ -864,7 +810,6 @@
           if (pt.life <= 0) particles.splice(i, 1);
         }
 
-        // Zwevende score-teksten updaten
         for (let i = floatingTexts.length - 1; i >= 0; i--) {
           const ft = floatingTexts[i];
           ft.y += ft.vy;
@@ -873,9 +818,6 @@
         }
       }
 
-      // ==========================================
-      // 6. TEKENFUNCTIES
-      // ==========================================
       function drawTrooper(x, y, hasChute, isFalling) {
         ctx.save();
         ctx.translate(Math.round(x), Math.round(y));
@@ -903,15 +845,12 @@
           ctx.fill();
         }
 
-        // Hoofd
         ctx.fillStyle = '#ffff55';
         ctx.fillRect(-3, -8, 6, 5);
 
-        // Lijf
         ctx.fillStyle = '#55ffff';
         ctx.fillRect(-4, -3, 8, 6);
 
-        // Armen
         ctx.fillStyle = '#ffff55';
         if (isFalling && Math.floor(frameCount / 4) % 2 === 0) {
           ctx.fillRect(-7, -7, 3, 4);
@@ -921,7 +860,6 @@
           ctx.fillRect(4, -3, 2, 5);
         }
 
-        // Benen
         ctx.fillStyle = '#ff55ff';
         ctx.fillRect(-4, 3, 3, 5);
         ctx.fillRect(1, 3, 3, 5);
@@ -977,13 +915,11 @@
       }
 
       function drawTurret() {
-        // Bunker basis
         ctx.fillStyle = '#55ffff';
         ctx.fillRect(TURRET_X - 44, GROUND_Y - 22, 88, 22);
         ctx.fillStyle = '#2277aa';
         ctx.fillRect(TURRET_X - 38, GROUND_Y - 16, 76, 16);
 
-        // Koepel
         ctx.fillStyle = '#ff55ff';
         ctx.beginPath();
         ctx.arc(TURRET_X, GROUND_Y - 22, 18, Math.PI, 0, false);
@@ -991,7 +927,6 @@
 
         if (!turret.alive) return;
 
-        // Draaiende loop
         ctx.save();
         ctx.translate(TURRET_X, TURRET_Y);
         ctx.rotate(turret.angle);
@@ -1008,7 +943,6 @@
         ctx.fillStyle = '#03030c';
         ctx.fillRect(0, 0, W, H);
 
-        // Sterren
         for (let i = 0; i < stars.length; i++) {
           const s = stars[i];
           const alpha = 0.4 + 0.6 * Math.abs(Math.sin(frameCount * 0.03 + s.blink));
@@ -1016,27 +950,22 @@
           ctx.fillRect(s.x, s.y, s.size, s.size);
         }
 
-        // Grond
         ctx.fillStyle = '#ff55ff';
         ctx.fillRect(0, GROUND_Y, W, 4);
         ctx.fillStyle = '#221133';
         ctx.fillRect(0, GROUND_Y + 4, W, H - GROUND_Y - 4);
 
-        // Bunker & geschut
         drawTurret();
 
-        // Vliegtuigen
         for (let i = 0; i < aircrafts.length; i++) {
           drawAircraft(aircrafts[i]);
         }
 
-        // Vallende parachutisten
         for (let i = 0; i < paratroopers.length; i++) {
           const p = paratroopers[i];
           drawTrooper(p.x, p.y, p.hasChute, !p.hasChute);
         }
 
-        // Gelande parachutisten of aanvalsteam
         if (gameState !== 'ASSAULT') {
           for (let i = 0; i < landedLeft.length; i++) {
             drawTrooper(landedLeft[i].x, landedLeft[i].y - 8, false, false);
@@ -1051,7 +980,6 @@
           }
         }
 
-        // Kogels
         ctx.fillStyle = '#ffff55';
         for (let i = 0; i < bullets.length; i++) {
           const b = bullets[i];
@@ -1060,15 +988,13 @@
           ctx.fill();
         }
 
-        // Explosiedeeltjes
         for (let i = 0; i < particles.length; i++) {
           const pt = particles[i];
           ctx.fillStyle = pt.color;
           ctx.fillRect(pt.x, pt.y, pt.size, pt.size);
         }
 
-        // Zwevende score-teksten
-        ctx.font = 'bold 14px "Courier New", Courier, monospace';
+        ctx.font = 'bold 15px "Courier New", monospace';
         ctx.textAlign = 'center';
         for (let i = 0; i < floatingTexts.length; i++) {
           const ft = floatingTexts[i];
@@ -1077,18 +1003,13 @@
         }
       }
 
-      // ==========================================
-      // 7. HOOFDLUS STARTEN
-      // ==========================================
-      function gameLoop() {
+      function loop() {
         update();
         draw();
-        requestAnimationFrame(gameLoop);
+        requestAnimationFrame(loop);
       }
 
-      window.onload = function () {
-        requestAnimationFrame(gameLoop);
-      };
+      loop();
     })();
   </script>
 </body>
